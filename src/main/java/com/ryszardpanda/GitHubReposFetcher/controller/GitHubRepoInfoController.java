@@ -1,13 +1,12 @@
 package com.ryszardpanda.GitHubReposFetcher.controller;
 
 import com.ryszardpanda.GitHubReposFetcher.mapper.GitHubRepoInfoMapper;
+import com.ryszardpanda.GitHubReposFetcher.model.GitHubRepoInFoUpdateDTO;
 import com.ryszardpanda.GitHubReposFetcher.model.GitHubRepositoryDetailsDTO;
+import com.ryszardpanda.GitHubReposFetcher.model.GitHubRepositoryEntity;
 import com.ryszardpanda.GitHubReposFetcher.service.GitHubRepoInfoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,18 +15,30 @@ public class GitHubRepoInfoController {
     private final GitHubRepoInfoMapper gitHubRepoInfoMapper;
 
     @GetMapping("/repositories/{owner}/{repoName}")
-    public GitHubRepositoryDetailsDTO getRepoInfo(@PathVariable String owner, @PathVariable String repoName){
-       return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService.getRepo(owner, repoName));
+    public GitHubRepositoryDetailsDTO getRepoInfo(@PathVariable String owner, @PathVariable String repoName) {
+        return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService.getRepo(owner, repoName));
     }
 
     @PostMapping("/repositories/{owner}/{repoName}")
-    public GitHubRepositoryDetailsDTO saveRepo(@PathVariable String owner, @PathVariable String repoName){
-       return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService.saveRepo(owner, repoName));
+    public GitHubRepositoryDetailsDTO saveRepo(@PathVariable String owner, @PathVariable String repoName) {
+        return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService.saveRepo(owner, repoName));
     }
 
     @GetMapping("/local/repositories/{owner}/{repoName}")
-    public GitHubRepositoryDetailsDTO getLocalRepos(@PathVariable String owner, @PathVariable String repoName){
-        String fullName = owner + "/" + repoName;
-        return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService.getRepoFromDb(fullName));
+    public GitHubRepositoryDetailsDTO getLocalRepos(@PathVariable String owner, @PathVariable String repoName) {
+        return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService
+                .getRepoFromDb(GitHubRepositoryEntity.fullNameMaker(owner, repoName)));
+    }
+
+    @PutMapping("/repositories/{owner}/{repoName}")
+    public GitHubRepositoryDetailsDTO updateGitHubRepoLocal(@PathVariable String owner,
+                                                            @PathVariable String repoName,
+                                                            @RequestBody GitHubRepoInFoUpdateDTO gitHubRepoInFoUpdateDTO) {
+        return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService.updateGitHubRepo(owner, repoName, gitHubRepoInFoUpdateDTO));
+    }
+
+    @DeleteMapping("/repositories/{owner}/{repoName}")
+    public void deleteRepo(@PathVariable String owner, @PathVariable String repoName){
+        gitHubRepoInfoService.deleteRepo(owner, repoName);
     }
 }

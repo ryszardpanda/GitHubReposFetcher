@@ -23,4 +23,9 @@ public class GitHubRepositoryEntity {
     private String cloneUrl;
     private int stars;
     private LocalDateTime createdAt;
+
+    public static String fullNameMaker(String owner, String repoName){
+        String fullName = owner + "/" + repoName;
+        return fullName;
+    }
 }

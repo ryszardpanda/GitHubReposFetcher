@@ -9,4 +9,5 @@ import org.mapstruct.Mapper;
 public interface GitHubRepoInfoMapper{
     GitHubRepositoryEntity gitHubRepoInfoDTOtogitHubRepoInfo(GitHubRepositoryDTO gitHubRepositoryDTO);
     GitHubRepositoryDetailsDTO gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(GitHubRepositoryEntity gitHubRepositoryEntity);
+
 }
