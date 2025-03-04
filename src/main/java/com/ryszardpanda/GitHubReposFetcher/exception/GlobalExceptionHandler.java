@@ -1,19 +1,20 @@
 package com.ryszardpanda.GitHubReposFetcher.exception;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler({LocalRepositoryNotFoundException.class})
-    public ResponseEntity<ErrorMessage> handleLocalRepositoryNotFoundException(
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorMessage handleLocalRepositoryNotFoundException(
             LocalRepositoryNotFoundException ex) {
-        ErrorMessage errorMessage = new ErrorMessage(
-                ex.getHttpStatus().value(),
-                ex.getHttpStatus().getReasonPhrase(),
+        return new ErrorMessage(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
                 ex.getMessage()
         );
-        return new ResponseEntity<>(errorMessage, ex.getHttpStatus());
     }
 }

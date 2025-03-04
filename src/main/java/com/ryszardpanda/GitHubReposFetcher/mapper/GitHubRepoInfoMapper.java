@@ -6,8 +6,9 @@ import com.ryszardpanda.GitHubReposFetcher.model.GitHubRepositoryDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface GitHubRepoInfoMapper{
-    GitHubRepositoryEntity gitHubRepoInfoDTOtogitHubRepoInfo(GitHubRepositoryDTO gitHubRepositoryDTO);
-    GitHubRepositoryDetailsDTO gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(GitHubRepositoryEntity gitHubRepositoryEntity);
+public interface GitHubRepoInfoMapper {
+    GitHubRepositoryEntity toEnityFromDTO(GitHubRepositoryDTO gitHubRepositoryDTO);
 
+    GitHubRepositoryDetailsDTO toDetailsDTOFromEntity(GitHubRepositoryEntity gitHubRepositoryEntity);
 }
+

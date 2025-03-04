@@ -24,8 +24,16 @@ public class GitHubRepositoryEntity {
     private int stars;
     private LocalDateTime createdAt;
 
-    public static String fullNameMaker(String owner, String repoName){
+    public static String createFullName(String owner, String repoName){
         String fullName = owner + "/" + repoName;
         return fullName;
+    }
+
+    public void update(GitHubRepoInFoUpdateDTO updateDTO) {
+        fullName = updateDTO.getFullName();
+        description = updateDTO.getDescription();
+        cloneUrl = updateDTO.getCloneUrl();
+        stars = updateDTO.getStars();
+        createdAt = updateDTO.getCreatedAt();
     }
 }

@@ -16,25 +16,25 @@ public class GitHubRepoInfoController {
 
     @GetMapping("/repositories/{owner}/{repoName}")
     public GitHubRepositoryDetailsDTO getRepoInfo(@PathVariable String owner, @PathVariable String repoName) {
-        return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService.getRepo(owner, repoName));
+        return gitHubRepoInfoMapper.toDetailsDTOFromEntity(gitHubRepoInfoService.getRepo(owner, repoName));
     }
 
     @PostMapping("/repositories/{owner}/{repoName}")
     public GitHubRepositoryDetailsDTO saveRepo(@PathVariable String owner, @PathVariable String repoName) {
-        return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService.saveRepo(owner, repoName));
+        return gitHubRepoInfoMapper.toDetailsDTOFromEntity(gitHubRepoInfoService.saveRepo(owner, repoName));
     }
 
     @GetMapping("/local/repositories/{owner}/{repoName}")
     public GitHubRepositoryDetailsDTO getLocalRepos(@PathVariable String owner, @PathVariable String repoName) {
-        return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService
-                .getRepoFromDb(GitHubRepositoryEntity.fullNameMaker(owner, repoName)));
+        return gitHubRepoInfoMapper.toDetailsDTOFromEntity(gitHubRepoInfoService
+                .getRepoFromDb(GitHubRepositoryEntity.createFullName(owner, repoName)));
     }
 
     @PutMapping("/repositories/{owner}/{repoName}")
     public GitHubRepositoryDetailsDTO updateGitHubRepoLocal(@PathVariable String owner,
                                                             @PathVariable String repoName,
                                                             @RequestBody GitHubRepoInFoUpdateDTO gitHubRepoInFoUpdateDTO) {
-        return gitHubRepoInfoMapper.gitHubRepositoryEntityToGitHubRepositoryDetailsDTO(gitHubRepoInfoService.updateGitHubRepo(owner, repoName, gitHubRepoInFoUpdateDTO));
+        return gitHubRepoInfoMapper.toDetailsDTOFromEntity(gitHubRepoInfoService.updateGitHubRepo(owner, repoName, gitHubRepoInFoUpdateDTO));
     }
 
     @DeleteMapping("/repositories/{owner}/{repoName}")

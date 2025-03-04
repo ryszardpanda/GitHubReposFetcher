@@ -21,36 +21,32 @@ public class GitHubRepoInfoService {
 
     public GitHubRepositoryEntity getRepo(String owner, String repositoryName) {
         GitHubRepositoryDTO repoInfoDTO = gitHubRepoInfoClient.getRepoInfo(owner, repositoryName);
-        return gitHubRepoInfoMapper.gitHubRepoInfoDTOtogitHubRepoInfo(repoInfoDTO);
+        return gitHubRepoInfoMapper.toEnityFromDTO(repoInfoDTO);
     }
 
-    public GitHubRepositoryEntity saveRepo(String owner, String repositoryName){
+    public GitHubRepositoryEntity saveRepo(String owner, String repositoryName) {
         GitHubRepositoryEntity repo = getRepo(owner, repositoryName);
         return gitHubRepoInfoRepository.save(repo);
     }
 
-    public GitHubRepositoryEntity getRepoFromDb(String fullName){
+    public GitHubRepositoryEntity getRepoFromDb(String fullName) {
         return gitHubRepoInfoRepository.findByFullName(fullName).orElseThrow(() ->
                 new LocalRepositoryNotFoundException("Repository with name: " + fullName + " are not found, check data and try again", HttpStatus.NOT_FOUND));
     }
 
     @Transactional
-    public GitHubRepositoryEntity updateGitHubRepo(String owner, String repoName, GitHubRepoInFoUpdateDTO gitHubRepoInfoUpdateDTO){
-        String fullName = GitHubRepositoryEntity.fullNameMaker(owner, repoName);
+    public GitHubRepositoryEntity updateGitHubRepo(String owner, String repoName, GitHubRepoInFoUpdateDTO gitHubRepoInfoUpdateDTO) {
+        String fullName = GitHubRepositoryEntity.createFullName(owner, repoName);
         GitHubRepositoryEntity gitHubRepositoryEntity = gitHubRepoInfoRepository.findByFullName(fullName).orElseThrow(() ->
                 new LocalRepositoryNotFoundException("Repository with name: " + fullName + " are not found, check data and try again", HttpStatus.NOT_FOUND));
-        gitHubRepositoryEntity.setFullName(gitHubRepoInfoUpdateDTO.getFullName());
-        gitHubRepositoryEntity.setDescription(gitHubRepoInfoUpdateDTO.getDescription());
-        gitHubRepositoryEntity.setCloneUrl(gitHubRepoInfoUpdateDTO.getCloneUrl());
-        gitHubRepositoryEntity.setStars(gitHubRepoInfoUpdateDTO.getStars());
-        gitHubRepositoryEntity.setCreatedAt(gitHubRepoInfoUpdateDTO.getCreatedAt());
 
+        gitHubRepositoryEntity.update(gitHubRepoInfoUpdateDTO);
         return gitHubRepoInfoRepository.save(gitHubRepositoryEntity);
     }
 
     @Transactional
-    public void deleteRepo(String owner, String repoName){
-        String fullName = GitHubRepositoryEntity.fullNameMaker(owner, repoName);
+    public void deleteRepo(String owner, String repoName) {
+        String fullName = GitHubRepositoryEntity.createFullName(owner, repoName);
         GitHubRepositoryEntity gitHubRepositoryEntity = gitHubRepoInfoRepository.findByFullName(fullName).orElseThrow(() ->
                 new LocalRepositoryNotFoundException("Repository with name: " + fullName + " are not found, check data and try again", HttpStatus.NOT_FOUND));
         gitHubRepoInfoRepository.delete(gitHubRepositoryEntity);
