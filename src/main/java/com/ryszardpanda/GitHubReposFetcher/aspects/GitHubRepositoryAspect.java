@@ -39,7 +39,7 @@ public class GitHubRepositoryAspect {
         System.out.println("jestem metodą GET/FIND");
     }
 
-    @Pointcut("execution(* com.ryszardpanda.GitHubReposFetcher.client.*.*(..))")
+    @Pointcut("execution(* com.ryszardpanda.GitHubReposFetcher.client.GitHubRepoInfoClient.*(..))")
     public void clientMethods() {}
 
     @Around("clientMethods()")
