@@ -1,6 +1,7 @@
 package com.ryszardpanda.GitHubReposFetcher.client;
 
 import com.ryszardpanda.GitHubReposFetcher.exception.GitHubCustomErrorDecoder;
+import feign.Logger;
 import feign.Retryer;
 import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,11 @@ public class GitHubClientConfiguration {
     @Bean
     public Retryer feignRetryer(){
         return new Retryer.Default(100, 500, 10);
+    }
+
+    @Bean
+    Logger.Level feignLoggerLevel() {
+        return Logger.Level.FULL;
     }
 }
 
