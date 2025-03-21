@@ -1,15 +1,15 @@
 package com.ryszardpanda.GitHubReposFetcher.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
+@Getter
 public class GitHubRepositoryDTO {
     @JsonProperty("full_name")
     private String fullName;
