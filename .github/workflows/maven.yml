@@ -1,0 +1,53 @@
+# GitLab CI dla GitHubReposFetcher (Java 21 + Maven + PostgreSQL)
+
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  POSTGRES_DB: githubrepos
+  POSTGRES_USER: user
+  POSTGRES_PASSWORD: password
+
+cache:
+  paths:
+    - .m2/repository
+
+# Job: Kompilacja aplikacji
+build:
+  stage: build
+  image: maven:3.9-eclipse-temurin-21
+  script:
+    - echo "🔨 Building application with Java 21"
+    - mvn clean package -DskipTests=true
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 week
+
+# Job: Testy jednostkowe oraz integracyjne z bazą H2
+test:
+  stage: test
+  image: maven:3.9-eclipse-temurin-21
+  script:
+    - echo "🧪 Running unit and integration tests with H2 database"
+    - mvn test
+
+# Job: Budowanie i publikacja obrazu Docker dla aplikacji z PostgreSQL
+deploy:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "🐳 Building Docker image for application with PostgreSQL"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+  environment:
+    name: production
+    url: https://example.com
+  only:
+    - main
